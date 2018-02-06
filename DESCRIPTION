@@ -1,0 +1,9 @@
+Package: longfused
+Type: Package
+Title: The Multinomial Fused Lasso Model
+Version: 1.0
+Date: 2014-10-15
+Author: Samrachana Adhikari, Fabrizio Lecci, Ryan Tibshirani
+Maintainer: Fabrizio Lecci <lecci@cmu.edu>
+Description: This package provides an efficient proximal gradient descent algorithm for computing solutions of the fused lasso regularized multinomial regression problem.
+License: GPL-3

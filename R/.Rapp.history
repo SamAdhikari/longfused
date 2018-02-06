@@ -1,0 +1,280 @@
+as.integer(2.3)
+library(TDA)
+# generate 2 datasets#
+XX1 = circleUnif(20)#
+XX2 = circleUnif(20, r=0.2)#
+cat("*Generated 2 datasets from circles\n")#
+#
+DiagLim=5#
+maxdimension=1#
+#
+# 2 diagrams#
+Diag1=ripsDiag(XX1,maxdimension,DiagLim, printStatus=F)#
+Diag2=ripsDiag(XX2,maxdimension,DiagLim, printStatus=F)#
+cat("*Computed corresponding rips diagrams\n")#
+#
+#bottleneck distance#
+bottleneckDist=bottleneck(Diag1, Diag2, dimension=1)#
+cat("*The bottleneck distance is ", bottleneckDist,"\n")#
+#
+#Wasserstein distance#
+p=2#
+wassersteinDist=wasserstein(Diag1, Diag2, p=p, dimension=1)#
+cat("*The ",p,"Wasserstein distance is ", wassersteinDist,"\n\n")
+pippo=matrix(1:6, ncol=2)
+pippo
+pippo2=pippo[which(pippo[,1]==4),]
+pippo2
+length(pippo)
+length(pippo2)
+class(pippo2)
+dim(pippo2)
+printProgress=T
+is.boolean(printProgress)
+is.bool(printProgress)
+printProgress=1
+is.logical(printProgress)
+printProgress=T
+is.logical(printProgress)
+library(TDA)
+n = 300#
+X = circleUnif(n)#
+cat("*Generate data from the unit circle\n")#
+#
+## Construct a grid of points over which we evaluate the functions#
+by=0.065#
+Xseq=seq(-1.6, 1.6, by=by)#
+Yseq=seq(-1.7, 1.7, by=by)#
+Grid=expand.grid(Xseq,Yseq)#
+cat("*Constructed a grid of points to evaluate the functions\n")
+h=0.3
+Kdist= kernelDist(X, Grid, h)
+Kdist= kernelDist(X, Grid, h, printProgress=T)
+Kdist= kernelDist(X, Grid, h, printProgress=TRUE)
+as.integer(TRUE)
+as.integer(F)
+print("0   10   20   30   40   50   60   70   80   90   100")
+cat("0   10   20   30   40   50   60   70   80   90   100\n")
+library(TDA)
+Diag=c(0,0,1)
+land=landscape(Diag)
+Diag=c(0,0,1)#
+#
+land=landscape(Diag)
+t(Diag)
+land=landscape(t(Diag))
+tseq=seq(0,1,length=100)
+tseq=seq(0,3,length=100)
+Diag=c(0,0,1)#
+#
+tseq=seq(0,3,length=100)#
+#
+land=landscape(t(Diag), tseq=tseq)
+plot(tseq, land, type="l")
+land
+t(Diag)
+land=landscape(t(Diag), dimension=1,tseq=tseq)
+plot(tseq, land, type="l")
+land=landscape(t(Diag), dimension=0,tseq=tseq)#
+#
+plot(tseq, land, type="l")
+X=torusUnif(1000, 0.5,1 )
+plot(X)
+X=torusUnif(173.3333, 0.5,1 )
+X=sphereUnif(173.3333)
+X=sphereUnif(173.3333, d=1)
+X
+X=circleUnif(173.3333)
+floor(173.3)
+?polygon
+library(longfused)#
+#fct for plotting#
+plotBeta=function(KK,TT, ylimPlot, beta, Title, Ylab){#
+	k=1#
+	plot((1:TT),beta[2,,k],ylim=ylimPlot, #
+	xlim = c(1,TT),xlab="Time",ylab=Ylab, main = Title, type="l" , col=2)#
+	lapply(2:p,function(x){ t=1:TT; lines(t,beta[x,,k], col = x, type = "l", lty=1,lwd=1.5)} )#
+}#
+#
+# multi.inv.logit is the multinomial inverse logit function for level k. #
+# this function is only used to generate fake data in our examples#
+multi.inv.logit=function(k,ind,t,X, betaHat){#
+	Xind=X[ind,,t]#
+	p=dim(betaHat)[1]#
+	KK=dim(betaHat)[3]+1#
+	XX=matrix(Xind,ncol=p)#
+	num=exp(XX%*%betaHat[,t,k])#
+	den1=sapply(1:(KK-1), FUN=function(h) (exp(XX%*%betaHat[,t,h]) ) )#
+	if (is.null(dim(den1))) {#
+		den2=sum(den1)#
+	} else den2=apply(den1, 1, sum)#
+	out=num/(1+den2)#
+	return(out)#
+	}#
+#####################################################
+##  Test to compare naive algorithm with our GGD#
+#####################################################
+#
+n=50#
+p=30#
+TT=15#
+KK=2#
+#
+## TRUE beta #
+beta=array(NA,c(p,TT,(KK-1)))#
+beta[1,,]=0#
+beta[2,,]=c(5,5,5,5,5,3,3,3,3,3,0,0,0,0,0)#
+beta[3,,]=c(0,0,0,0,0,-4,-4,-4,-4,-4,-4,-4,-4,-4,-4)#
+beta[4,,]=c(-3,-3,-3,-3,-3,-3,4,4,4,4,4,4,4,4,4)#
+beta[5:30,,]=0#
+PredLog=numeric()#
+PredGGD=numeric()#
+#
+## we repeat the procedure nTest times#
+set.seed(0)#
+#
+###########################
+## Generate some data:#
+##########################
+#
+X=array(rnorm(n*(p)*TT,0,1) ,dim=c(n,(p),TT))#
+X[,1,]=1  #for the intercept#
+#generate Y#
+Y=matrix(NA,nrow=n, ncol=TT)#
+prob=array(NA,c(n,TT,KK))#
+for (i in 1:n){#
+	for (t in 1:TT){#
+			for (k in 1:(KK-1)){#
+				prob[i,t,k]=multi.inv.logit(k,ind=i, t,X, beta)#
+			}#
+			prob[i,t,KK]=max(1-sum(prob[i,t,1:(KK-1)]),0)#
+			Y[i,t]=sample(1:KK,1,replace=F,prob[i,t,])#
+	}#
+}#
+#
+################################
+## simple logistic regression	#
+###############################
+Ybin=1*(Y==1)#
+resBeta=beta#
+#
+for (t in 1:TT){#
+resBeta[,t,1]=glm(Ybin[,t] ~ X[,-1,t] ,family="binomial")$coef#
+}
+niter=1000#
+betaInit= array(0,c(p,TT,(KK-1)))#
+lambda1=0.000000000001#
+lambda2=0#
+factor = 0.8#
+eps=0.00000001#
+tauStart=260#
+stop=1
+X
+dim(X)
+X[1,1:2,1]
+X[1,1:2,1:3]
+X[1:5,1:2,1]
+Y
+niter=1000#
+betaInit= array(0,c(p,TT,(KK-1)))#
+lambda1=0.000000000001#
+lambda2=0#
+factor = 0.8#
+eps=0.00000001#
+tauStart=260#
+stop=1
+dim(betaInit)
+betaInit
+dim(betaInit)
+NN=dim(X)[1]
+PP=dim(X)[2]
+TT=dim(X)[3]
+KK=dim(betaInit)[3]
+Y
+KK
+beta=array(NA,c(p,TT,(KK-1)))
+beta
+n=50#
+p=30#
+TT=15#
+KK=2#
+#
+## TRUE beta #
+beta=array(NA,c(p,TT,(KK-1)))
+beta
+dim(beta)
+KK=dim(betaInit)[3]
+KK
+KKminus1=dim(betaInit)[3]
+KKminus1
+Nt = sapply(1:TT, FUN= function(tt) sum(!is.na(Y[,tt])) )  #only consider non missing values
+Nt
+Nt= rep(1, TT)
+Nt
+longfused<-#
+function(X,Y,betaInit,lambda1,lambda2,niter,stop,eps,tauStart,factor, missing=FALSE){#
+	NN=dim(X)[1]#
+	PP=dim(X)[2]#
+	TT=dim(X)[3]#
+	KKminus1=dim(betaInit)[3]#
+	if (missing)#
+	{#
+		#only consider non missing values#
+		Nt = sapply(1:TT, FUN= function(tt) sum(!is.na(Y[,tt])) )  #
+	} else#
+	{#
+		Nt= rep(1, TT)	#
+	}#
+	Y[which(is.na(Y))]=0#
+#
+	newBeta=betaInit	#
+	objectives=rep(0,niter)#
+	taus=rep(0,niter)#
+	criterions=rep(0,niter)#
+	actualNiter=0#
+	out=.C("GGD", as.double(Y), as.double(X), as.double(betaInit), as.double(lambda1), as.double(lambda2), as.integer(NN), as.integer(PP), as.integer(TT), as.integer(KKminus1), as.integer(Nt), as.integer(niter), as.integer(stop), as.double(eps), as.double(tauStart), as.double(factor), as.double(newBeta), as.double(objectives), as.double(taus), as.double(criterions), as.integer(actualNiter),dup=FALSE )#
+	actualNiter=out[[20]]#
+	newBeta=array(out[[16]], c(PP,TT,KKminus1))#
+	objectives=out[[17]][1:actualNiter]	#
+	taus=out[[18]][1:actualNiter]	#
+	criterions=out[[19]][1:actualNiter]	#
+	return(list("betaHat"=newBeta, "objective_fnc"=objectives, "Tau"=taus, "StopCriterion"=criterions, "iter"=actualNiter))	#
+}
+niter=500#
+betaInit= array(0,c(p,TT,(KK-1)))#
+lambda1=0.05*50#
+lambda2=0.25*50#
+factor = 0.8#
+eps=0.000000001#
+tauStart=260#
+stop=1#
+#
+rsltC2<-longfused(X,Y,betaInit,lambda1,lambda2,niter,stop,eps,tauStart,factor)
+niter=500#
+betaInit= array(0,c(p,TT,(KK-1)))#
+lambda1=0.05#
+lambda2=0.25#
+factor = 0.8#
+eps=0.000000001#
+tauStart=260#
+stop=1#
+#
+rsltC2<-longfused(X,Y,betaInit,lambda1,lambda2,niter,stop,eps,tauStart,factor)
+niter=500#
+betaInit= array(0,c(p,TT,(KK-1)))#
+lambda1=0.05/50#
+lambda2=0.25/50#
+factor = 0.8#
+eps=0.000000001#
+tauStart=260#
+stop=1#
+#
+rsltC2<-longfused(X,Y,betaInit,lambda1,lambda2,niter,stop,eps,tauStart,factor)
+pippo=TRUE
+max(pippo,0)
+max(pippo,-1)
+max(pippo,2)
+pippo
+pippo:4
+pippo=F
+pippo:4

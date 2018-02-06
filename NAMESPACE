@@ -1,0 +1,6 @@
+export(	longfused,
+	plot.longfused )
+
+S3method(plot, longfused)
+
+useDynLib(longfused)

@@ -1,0 +1,10 @@
+library(TDA)
+# input data#
+n = 400#
+XX = circleUnif(n)
+pippo=matrix(1:12, ncol=3)
+pippo$columnames
+columnames(pippo)
+pippo
+attributes(pippo)
+colnames(pippo)
